@@ -11,6 +11,7 @@ When using this method, the application will be available at http://localhost:50
 
 # Testing
 Several accounts are created already to test with. Their details are below:
+
 |Username|Password|SSN|Account Number|Account Balance|
 |--------------|----------|---------|---------|----|
 |test1@test.com|Passw0rd1!|123121231|111111111|1.11|
