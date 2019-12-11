@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<br />
+<br />
+<div style="text-align: center"><img src="~/images/Security PS Logo.png" /></div>
+
+<br />
+<br />
+<div>    
+    <p>
+        Security PS created an intentionally vulnerable ASP.NET MVC application with the goal of mimicking common flaws found in applications we assess. Both new and experienced security professionals can use this application to test their skill in bypassing steps of the authentication process and compromising other users' accounts. If you would like to start a career in software security, you live in the Kansas City area, and you're interested in working at Security PS then reach out by visiting: <a href="https://www.securityps.com">https://www.securityps.com</a> and clicking "Contact Us".
+    </p>
+    <p>
+        Several accounts are created already to test with. Their details are below:
+    </p>
+    <p>
+        <table class="">
+            <tr><th>Username</th><th>Password</th><th>SSN</th><th>Account Number</th><th>Account Balance</th></tr>
+            <tr><td>test1@test.com</td><td>Passw0rd1!</td><td>123121231</td><td>111111111</td><td>1.11</td></tr>
+            <tr><td>test2@test.com</td><td>Passw0rd2!</td><td>123121232</td><td>222222222</td><td>1.12</td></tr>
+            <tr><td>test3@test.com</td><td>Passw0rd3!</td><td>123121233</td><td>333333333</td><td>1.13</td></tr>
+            <tr><td>test4@test.com</td><td>Passw0rd4!</td><td>123121234</td><td>444444444</td><td>1.14</td></tr>
+        </table>
+    </p>
+    <p>
+        Also, there are three accounts you can attempt to compromise. They have been created with a random password, SSN, account number, and account balance. The username is of the format target###&#x40;test.com where the ### is a random three digit number (i.e. target853&#x40;test.com).
+    </p>
+    <p>
+        At first, practice finding vulnerabilities with the test1@test.com through test4@test.com. Try to skip process steps and compromise those accounts. Then move on to the target accounts. You can try things like:
+        <ul>
+            <li>Get a list of usernames in the application</li>
+            <li>Skip steps of the authentication process for other users</li>
+            <li>Gain full access to another user account</li>
+            <li>and more...</li>
+        </ul>
+    </p>
+    <p>
+        Some of the exploits require you to use a proxy tool such as Burp Suite, OWASP ZAP, or Fiddler to exploit. Depending on your platform, you may have to add a host entry to be able to proxy traffic properly. On Windows add an entry to <code>c:\windows\system32\drivers\etc\hosts</code> such as:
+    </p>
+    <p>
+        <code>
+            127.0.0.1 application.local
+        </code>
+    </p>
+</div>

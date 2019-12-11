@@ -1,0 +1,50 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Enter Your Username";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="message">@ViewData["Message"]</div>
+<div class="message">
+    @if (ViewData.ContainsKey("ssn"))
+    {
+        <p>Your automatically generated SSN is: @ViewData["ssn"]</p>
+        <p>Your automatically generated account number is: @ViewData["account"]</p>
+        <p>Your automatically generated balance is: @ViewData["balance"]</p>
+    }
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Log in</button>
+                </div>
+                @*<div class="form-group">
+            <p>
+                <a asp-action="ForgotPassword">Forgot your password?</a>
+            </p>
+            <p>
+                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+            </p>
+        </div>*@
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
