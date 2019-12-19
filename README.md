@@ -1,15 +1,16 @@
 # Security PS's Intentionally Vulnerable Authentication Application
 Security PS created an intentionally vulnerable ASP.NET MVC application with the goal of mimicking common flaws found in applications we assess. Both new and experienced security professionals can use this application to test their skill in bypassing steps of the authentication process and compromising other users' accounts. If you would like to start a career in software security, you live in the Kansas City area, and you're interested in working at Security PS then reach out by visiting: https://www.securityps.com and clicking "Contact Us". 
 
-# Docker
+# Running the Application
+## Using Docker
 This application is bundled as a docker image. To download and run the image, use the following command:
 ```
 docker run -d -p 5000:5000 ntucker000/authenticationchallenge
 ```
 The application will be available at http://localhost:5000/
 
-# Setup
-The application was developed using ASP.NET Core 2. Go to https://dotnet.microsoft.com and get the latest version of .NET Core for your platform. The application is cross platform so it will work on Windows, Linux, MAC OS X, and any other platform supported by Microsoft. The code builds successfully under both Visual Studio 2017 and 2019 and can be run both under IIS and standalone. If you are executing the code in an environment without Visual Studio, the following commands can be used:
+## Without Docker
+The application was developed using ASP.NET Core 2. If you choose to run it outside of Docker, then go to https://dotnet.microsoft.com and get the latest version of .NET Core for your platform. The application is cross platform so it will work on Windows, Linux, MAC OS X, and any other platform supported by Microsoft. The code builds successfully under both Visual Studio 2017 and 2019 and can be run both under IIS and standalone. If you are executing the code in an environment without Visual Studio, the following commands can be used:
 ```
 dotnet restore
 dotnet run
