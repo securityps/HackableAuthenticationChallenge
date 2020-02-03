@@ -30,6 +30,14 @@ namespace AuthenticationChallenge
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            });
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -63,6 +71,7 @@ namespace AuthenticationChallenge
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
 
         }
     }
