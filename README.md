@@ -5,7 +5,7 @@ Security PS created an intentionally vulnerable ASP.NET MVC application with the
 ## Using Docker
 This application is bundled as a docker image. To download and run the image, use the following command:
 ```
-docker run -d -p 5000:5000 ntucker000/authenticationchallenge
+docker run -d -p 5000:5000 ncoblentzsps/authenticationchallenge
 ```
 The application will be available at http://localhost:5000/
 

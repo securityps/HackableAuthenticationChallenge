@@ -3,17 +3,16 @@
 # to build the image
 
 # Run the container via:
-# docker run -d -p 5000:5000 ntucker000/authenticationchallenge
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
-WORKDIR /app
-
-COPY *.csproj ./
-RUN dotnet restore
-
-COPY . ./
-RUN dotnet publish -c Release -o out
-
+# docker run -d -p 5000:5000 authenticationchallenge
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1
+
+
+RUN apt update
+RUN apt install -y libgdiplus
 WORKDIR /app
-COPY --from=build /app/out .
-ENTRYPOINT ["dotnet", "AuthenticationChallenge.dll"]
+COPY . .
+
+
+EXPOSE 5000
+
+ENTRYPOINT dotnet run
