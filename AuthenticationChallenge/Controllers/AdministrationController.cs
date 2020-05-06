@@ -73,6 +73,7 @@ namespace AuthenticationChallenge.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditUserViewModel vm)
         {
+            bool newUser = false;
             foreach (IdentityRole role in _roleManager.Roles.ToList<IdentityRole>())
             {
                 vm.AvailableRoles.Add(role.Name);
@@ -85,6 +86,7 @@ namespace AuthenticationChallenge.Controllers
             ApplicationUser user;
             if (vm.Id == null)
             {
+                newUser = true;
                 user = new ApplicationUser();
                 user.UserName = vm.Username;
             }
@@ -102,12 +104,15 @@ namespace AuthenticationChallenge.Controllers
             user.AccountNumber = vm.AccountNumber;
             user.SocialSecurityNumber = vm.SSN;
             user.LastStatementBalance = vm.Balance;
-            
 
-            IdentityResult result = await _userManager.UpdateAsync(user);
+            IdentityResult result;
+            if (newUser)
+                result = await _userManager.CreateAsync(user);
+            else
+                result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                user = await _userManager.FindByIdAsync(vm.Id);
+                user = await _userManager.FindByNameAsync(user.UserName);
                 IList<string> inRoles = await _userManager.GetRolesAsync(user);
                 List<Task> roleTasks = new List<Task>();
                 foreach(string role in inRoles)

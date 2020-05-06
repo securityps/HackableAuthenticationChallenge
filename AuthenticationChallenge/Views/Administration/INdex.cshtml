@@ -5,7 +5,7 @@
 }
 
 <h2>All Users</h2>
-
+<a asp-action="Edit">Create User</a>
 <table class="table table-bordered">
     <thead><tr><th class="text-center">Username</th><th class="text-center">Email</th><th class="text-center">2FA Enabled</th><th class="text-center">Role</th><th class="text-center">Actions</th></tr></thead>
     @foreach (IndexPageUserViewModel vm in this.Model)
