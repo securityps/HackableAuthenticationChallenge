@@ -11,6 +11,12 @@
             <li>
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
+            @if (await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), AuthorizationRoles.Administrator))
+            {
+                <li>
+                    <a asp-controller="Administration" asp-action="Index" title="Administration">Administration</a>
+                </li>
+            }
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
             </li>

@@ -10,18 +10,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationChallenge.Controllers
 {
-    //[Authorize(Roles = AuthorizationRoles.Administrator)]
+    [Authorize(Roles = AuthorizationRoles.Administrator)]
     public class AdministrationController : Controller
     {
         private ApplicationDbContext _dbContext;
         UserManager<ApplicationUser> _userManager;
         SignInManager<ApplicationUser> _signInManager;
+        RoleManager<IdentityRole> _roleManager;
 
         public AdministrationController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         public async Task<ActionResult> Index()
@@ -41,24 +43,29 @@ namespace AuthenticationChallenge.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(string id)
         {
-            if(string.IsNullOrEmpty(id))
+            EditUserViewModel vm = new EditUserViewModel();
+            foreach(IdentityRole role in _roleManager.Roles.ToList<IdentityRole>())
             {
-                return View(new EditUserViewModel());
+                vm.AvailableRoles.Add(role.Name);
+            }
+            
+            if (string.IsNullOrEmpty(id))
+            {
+                return View(vm);
             }
 
             ApplicationUser user = await _userManager.FindByIdAsync(id);
             if (user == null)
                 return RedirectToAction(nameof(AdministrationController.Index));
-            EditUserViewModel vm = new EditUserViewModel()
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                AccountNumber = user.AccountNumber,
-                Balance = user.LastStatementBalance,
-                SSN = user.SocialSecurityNumber,
-                Roles = await _userManager.GetRolesAsync(user),
-                Id = id
-            };
+
+            vm.Username = user.UserName;
+            vm.Email = user.Email;
+            vm.AccountNumber = user.AccountNumber;
+            vm.Balance = user.LastStatementBalance;
+            vm.SSN = user.SocialSecurityNumber;
+            vm.Roles = await _userManager.GetRolesAsync(user);
+            vm.Id = id;
+
             return View(vm);
         }
 
@@ -66,7 +73,12 @@ namespace AuthenticationChallenge.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditUserViewModel vm)
         {
-            if(vm==null)
+            foreach (IdentityRole role in _roleManager.Roles.ToList<IdentityRole>())
+            {
+                vm.AvailableRoles.Add(role.Name);
+            }
+
+            if (vm==null)
             {
                 return RedirectToAction(nameof(this.Index));
             }            
@@ -90,17 +102,32 @@ namespace AuthenticationChallenge.Controllers
             user.AccountNumber = vm.AccountNumber;
             user.SocialSecurityNumber = vm.SSN;
             user.LastStatementBalance = vm.Balance;
+            
 
             IdentityResult result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(this.Index));
+                user = await _userManager.FindByIdAsync(vm.Id);
+                IList<string> inRoles = await _userManager.GetRolesAsync(user);
+                List<Task> roleTasks = new List<Task>();
+                foreach(string role in inRoles)
+                {
+                    if(!vm.Roles.Contains(role) && AuthorizationRoles.AllRoles.Contains(role))
+                    {
+                        roleTasks.Add(_userManager.RemoveFromRoleAsync(user, role));
+                    }
+                }
+                foreach(string role in vm.Roles)
+                {
+                    if (!inRoles.Contains(role))
+                    {
+                        roleTasks.Add(_userManager.AddToRoleAsync(user, role));
+                    }
+                }
+                Task.WaitAll(roleTasks.ToArray());
+                return RedirectToAction(nameof(this.Index));                
             }
-            else
-            {
-                return View(vm);
-            }
-            
+            return View(vm);
         }
     }
 
@@ -115,6 +142,7 @@ namespace AuthenticationChallenge.Controllers
         public string Username { get; set; }
         public string Email { get; set; }
         public IList<string> Roles { get; set; }
+        public IList<string> AvailableRoles { get; set; }
         public string SSN { get; set; }
         public string AccountNumber { get; set; }
         public string Balance { get; set; }
@@ -123,6 +151,7 @@ namespace AuthenticationChallenge.Controllers
         public EditUserViewModel()
         {
             Roles = new List<string>();
+            AvailableRoles = new List<string>();
         }
     }
 }

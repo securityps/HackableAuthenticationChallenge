@@ -31,6 +31,24 @@
         <input asp-for="Balance" class="form-control" />
         <span asp-validation-for="Balance" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label for="">Roles:</label>
+        <select asp-for="Roles">
+            @foreach (string role in Model.AvailableRoles)
+            {
+                @if (Model.Roles.Contains(role))
+                {
+                    <option name="@role" selected="selected">@role</option>
+                }
+                else
+                {
+                    <option name="@role">@role</option>
+                }
+
+            }
+        </select>
+        <span asp-validation-for="Roles" class="text-danger"></span>
+    </div>
     <input type="hidden" asp-for="Id" />
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-default">Submit</button>
