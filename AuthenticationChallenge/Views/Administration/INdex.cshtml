@@ -1,0 +1,17 @@
+﻿@using AuthenticationChallenge.Controllers;
+@model IEnumerable<IndexPageUserViewModel>
+@{
+    ViewData["Title"] = "User Administration - All Users";
+}
+
+<h2>All Users</h2>
+
+<table>
+    <tr><th>Username</th><th>Email</th><th>2FA Enabled</th><th>Role</th></tr>
+    @foreach (IndexPageUserViewModel vm in this.Model)
+    {
+        <tr><td>@vm.User.UserName</td><td>@vm.User.Email</td><td>@vm.User.TotpEnabled</td><td>@string.Join(", ",@vm.Roles)</td></tr>
+    }
+</table>
+
+
