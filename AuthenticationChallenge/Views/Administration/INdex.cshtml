@@ -6,11 +6,11 @@
 
 <h2>All Users</h2>
 
-<table>
-    <tr><th>Username</th><th>Email</th><th>2FA Enabled</th><th>Role</th></tr>
+<table class="table table-bordered">
+    <thead><tr><th class="text-center">Username</th><th class="text-center">Email</th><th class="text-center">2FA Enabled</th><th class="text-center">Role</th><th class="text-center">Actions</th></tr></thead>
     @foreach (IndexPageUserViewModel vm in this.Model)
     {
-        <tr><td>@vm.User.UserName</td><td>@vm.User.Email</td><td>@vm.User.TotpEnabled</td><td>@string.Join(", ",@vm.Roles)</td></tr>
+        <tr><td class="text-center">@vm.User.UserName</td><td class="text-center">@vm.User.Email</td><td class="text-center">@vm.User.TotpEnabled</td><td class="text-center">@string.Join(", ",@vm.Roles)</td><td class="text-center"><a asp-action="Edit" asp-route-id="@vm.User.Id"><i class="material-icons">mode_edit</i></a></td></tr>
     }
 </table>
 
