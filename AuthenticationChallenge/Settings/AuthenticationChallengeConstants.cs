@@ -87,17 +87,10 @@ namespace AuthenticationChallenge.Settings
                     user.TotpSecret = totpbuffer;
                 }
 
-                userTasks.Add(userManager.CreateAsync(user, "Passw0rd" + System.Guid.NewGuid().ToString() + i + "!"));
-
-                ApplicationUser adminUser = new ApplicationUser() { UserName="admin@test.com",Email="admin@test.com",Answer1="a",Answer2="a",AccountNumber="1",SocialSecurityNumber="111111111" };
-                userTasks.Add(userManager.CreateAsync(adminUser, "password"));                               
+                userTasks.Add(userManager.CreateAsync(user, "Passw0rd" + System.Guid.NewGuid().ToString() + i + "!"));                                               
             }
-
-            Task.WhenAll(userTasks.ToArray()).ContinueWith( async (t) => 
-            {
-                ApplicationUser adminUser = await userManager.FindByNameAsync("admin@test.com");
-                await userManager.AddToRoleAsync(adminUser, AuthorizationRoles.Administrator);
-            }); ;
+            
+            Task.WaitAll(userTasks.ToArray());            
         }
     }
 }

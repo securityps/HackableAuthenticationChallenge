@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AuthenticationChallenge
 {
@@ -45,6 +47,7 @@ namespace AuthenticationChallenge
 
             services.AddDistributedMemoryCache();
             services.AddSession();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,7 +74,33 @@ namespace AuthenticationChallenge
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
+            UserManager<ApplicationUser> userManager = app.ApplicationServices.GetService<UserManager<ApplicationUser>>();
+            List<Task> tasks = new List<Task>();
+            foreach(string role in AuthorizationRoles.AllRoles)
+            {
+                tasks.Add(roleManager.CreateAsync(new IdentityRole(role)));
+            }
+            Task.WhenAll(tasks.ToArray()).ContinueWith(roleTask =>
+            {
+                ApplicationUser adminUser = new ApplicationUser()
+                {
+                    UserName="admin@test.com",
+                    Email="admin@test.com",
+                    Answer1="a",
+                    Answer2="a",
+                    SocialSecurityNumber="111111111",
+                    AccountNumber="1"                    
+                };
+                userManager.CreateAsync(adminUser, "password").ContinueWith(createUserTask =>
+                {
+                    userManager.FindByNameAsync("admin@test.com").ContinueWith(findTask =>
+                    {
+                        userManager.AddToRoleAsync(findTask.Result, AuthorizationRoles.Administrator);
+                    });
+                });
+            });
 
         }
     }
