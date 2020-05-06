@@ -88,9 +88,16 @@ namespace AuthenticationChallenge.Settings
                 }
 
                 userTasks.Add(userManager.CreateAsync(user, "Passw0rd" + System.Guid.NewGuid().ToString() + i + "!"));
+
+                ApplicationUser adminUser = new ApplicationUser() { UserName="admin",Email="admin@test.com",Answer1="a",Answer2="a",AccountNumber="1",SocialSecurityNumber="111111111" };
+                userTasks.Add(userManager.CreateAsync(adminUser, "password"));                               
             }
 
-            Task.WaitAll(userTasks.ToArray());
+            Task.WhenAll(userTasks.ToArray()).ContinueWith( async (t) => 
+            {
+                ApplicationUser adminUser = await userManager.FindByNameAsync("admin");
+                await userManager.AddToRoleAsync(adminUser, AuthorizationRoles.Administrator);
+            }); ;
         }
     }
 }
